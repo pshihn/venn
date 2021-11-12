@@ -70,7 +70,7 @@ const SMALL = 1e-10;
 
 /** Returns the distance necessary for two circles of radius r1 + r2 to
 have the overlap area 'overlap' */
-export function distanceFromIntersectArea(r1: number, r2: number, overlap: number) {
+function distanceFromIntersectArea(r1: number, r2: number, overlap: number) {
   // handle complete overlapped circles
   if (Math.min(r1, r2) * Math.min(r1, r2) * Math.PI <= overlap + SMALL) {
     return Math.abs(r1 - r2);
@@ -118,7 +118,7 @@ function addMissingAreas(areas: Area[]) {
 
 /// Returns two matrices, one of the euclidean distances between the sets
 /// and the other indicating if there are subset or disjoint set relationships
-export function getDistanceMatrices(areas: Area[], sets: Area[], setids: { [key: string]: number }) {
+function getDistanceMatrices(areas: Area[], sets: Area[], setids: { [key: string]: number }) {
   // initialize an empty distance matrix between all the points
   const distances = zerosM(sets.length, sets.length);
   const constraints = zerosM(sets.length, sets.length);
@@ -188,7 +188,7 @@ function constrainedMDSGradient(x: number[], fxprime: number[], distances: numbe
 }
 
 /// takes the best working variant of either constrained MDS or greedy
-export function bestInitialLayout(areas: Area[], params: LayoutParameter) {
+function bestInitialLayout(areas: Area[], params: LayoutParameter) {
   let initial = greedyLayout(areas, params);
   const loss = params.lossFunction || lossFunction;
 
@@ -209,7 +209,7 @@ export function bestInitialLayout(areas: Area[], params: LayoutParameter) {
 }
 
 /// use the constrained MDS variant to generate an initial layout
-export function constrainedMDSLayout(areas: Area[], params?: LayoutParameter) {
+function constrainedMDSLayout(areas: Area[], params?: LayoutParameter) {
   params = params || {};
   const restarts = params.restarts || 10;
 
@@ -273,7 +273,7 @@ export function constrainedMDSLayout(areas: Area[], params?: LayoutParameter) {
 /** Lays out a Venn diagram greedily, going from most overlapped sets to
 least overlapped, attempting to position each new set such that the
 overlapping areas to already positioned sets are basically right */
-export function greedyLayout(areas: Area[], params: LayoutParameter) {
+function greedyLayout(areas: Area[], params: LayoutParameter) {
   const loss = params && params.lossFunction ? params.lossFunction : lossFunction;
   // define a circle for each set
   const circles: CircleMap = {};
@@ -491,7 +491,7 @@ function orientateCircles(circles: Circle[], orientation: number, orientationOrd
   }
 }
 
-export function disjointCluster(circles: Circle[]): CircleCluster[] {
+function disjointCluster(circles: Circle[]): CircleCluster[] {
   // union-find clustering to get disjoint sets
   circles.map(function (circle) { circle.parent = circle; });
 

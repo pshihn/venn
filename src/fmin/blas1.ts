@@ -35,12 +35,3 @@ export function weightedSum(ret: number[], w1: number, v1: number[], w2: number,
     ret[j] = w1 * v1[j] + w2 * v2[j];
   }
 }
-
-
-// TODO: check if this and other functions are used
-
-export function gemv(output: number[], A: number[][], x: number[]) {
-  for (let i = 0; i < output.length; ++i) {
-    output[i] = dot(A[i], x);
-  }
-}
