@@ -3,7 +3,7 @@
 // Code adapted from https://github.com/benfred/venn.js
 
 
-import { Circle, Arc, Point } from './core';
+import { Circle, Arc, Point } from '../interfaces';
 const SMALL = 1e-10;
 
 export interface PointWithIndex extends Point {

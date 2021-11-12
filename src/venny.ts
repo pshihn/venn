@@ -1,5 +1,7 @@
-import { VennDiagram } from './diagram';
 import { Area } from './interfaces';
+import { VennDiagram } from './venn-diagram';
+
+import './venn-diagram.js';
 
 const sets: Area[] = [
   { sets: ['A'], size: 12 },
@@ -7,6 +9,5 @@ const sets: Area[] = [
   { sets: ['A', 'B'], size: 2 },
 ];
 
-
-const vd = new VennDiagram();
-console.log(vd.render(sets));
+const vd = document.querySelector('venn-diagram') as VennDiagram;
+vd.sets = sets;

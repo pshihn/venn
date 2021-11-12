@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Area, Circle, CircleMap, Point } from './interfaces';
+import { Area, Circle, CircleMap, Point } from '../interfaces';
 import { venn, lossFunction, normalizeSolution, scaleSolution } from './layout';
 import { intersectionArea, distance, getCenter } from './circle-intersection';
-import { nelderMead, NelderData } from './fmin/nelder-mead';
+import { nelderMead, NelderData } from '../fmin/nelder-mead';
 
-export interface VennDiagramConfig {
+export interface DiagramConfig {
   width?: number;
   height?: number;
   padding?: number;
@@ -14,7 +14,7 @@ export interface VennDiagramConfig {
   orientationOrder?: (a: Circle, b: Circle) => number;
 }
 
-export interface ResolvedVennDiagramConfig extends VennDiagramConfig {
+export interface ResolvedDiagramConfig extends DiagramConfig {
   width: number;
   height: number;
   padding: number;
@@ -22,7 +22,7 @@ export interface ResolvedVennDiagramConfig extends VennDiagramConfig {
   orientation: number;
 }
 
-const DFEAULT_CONFIG: ResolvedVennDiagramConfig = {
+const DFEAULT_CONFIG: ResolvedDiagramConfig = {
   width: 600,
   height: 350,
   padding: 15,
@@ -30,40 +30,33 @@ const DFEAULT_CONFIG: ResolvedVennDiagramConfig = {
   orientation: Math.PI / 2,
 };
 
-export class VennDiagram {
-  private _config: ResolvedVennDiagramConfig;
+export function diagram(areas: Area[], config?: DiagramConfig) {
+  const _config = Object.assign({}, DFEAULT_CONFIG, config || {}) as ResolvedDiagramConfig;
+  let data = areas;
 
-  constructor(config?: VennDiagramConfig) {
-    this._config = Object.assign({}, DFEAULT_CONFIG, config || {}) as ResolvedVennDiagramConfig;
-  }
-
-
-  render(areas: Area[]) {
-    let data = areas;
-    // handle 0-sized sets by removing from input
-    const toRemove = new Set<string>();
-    data.forEach(function (datum) {
-      if ((datum.size === 0) && datum.sets.length === 1) {
-        toRemove.add(datum.sets[0]);
-      }
-    });
-    data = data.filter(function (datum) {
-      return !datum.sets.some((set) => toRemove.has(set));
-    });
-
-    let circles: CircleMap = {};
-    let textCentres = new Map<string[], Point>();
-    if (data.length) {
-      let solution = venn(data, { lossFunction });
-      if (this._config.normalize) {
-        solution = normalizeSolution(solution, this._config.orientation, this._config.orientationOrder);
-        circles = scaleSolution(solution, this._config.width, this._config.height, this._config.padding);
-        textCentres = computeTextCentres(circles, data);
-      }
+  // handle 0-sized sets by removing from input
+  const toRemove = new Set<string>();
+  data.forEach(function (datum) {
+    if ((datum.size === 0) && datum.sets.length === 1) {
+      toRemove.add(datum.sets[0]);
     }
+  });
+  data = data.filter(function (datum) {
+    return !datum.sets.some((set) => toRemove.has(set));
+  });
 
-    return { circles, textCentres };
+  let circles: CircleMap = {};
+  let textCentres = new Map<string[], Point>();
+  if (data.length) {
+    let solution = venn(data, { lossFunction });
+    if (_config.normalize) {
+      solution = normalizeSolution(solution, _config.orientation, _config.orientationOrder);
+      circles = scaleSolution(solution, _config.width, _config.height, _config.padding);
+      textCentres = computeTextCentres(circles, data);
+    }
   }
+
+  return { circles, textCentres };
 }
 
 function getOverlappingCircles(circles: CircleMap) {

@@ -3,12 +3,12 @@
 
 // Code adapted from https://github.com/benfred/venn.js
 
-import { zeros, zerosM, norm2, scale } from './fmin/blas1';
-import { bisect } from './fmin/bisect';
-import { conjugateGradient } from './fmin/conjugate-gradient';
-import { nelderMead, NelderData } from './fmin/nelder-mead';
+import { zeros, zerosM, norm2, scale } from '../fmin/blas1';
+import { bisect } from '../fmin/bisect';
+import { conjugateGradient } from '../fmin/conjugate-gradient';
+import { nelderMead, NelderData } from '../fmin/nelder-mead';
 import { intersectionArea, circleOverlap, circleCircleIntersection, distance } from './circle-intersection';
-import { Area, Point, Circle, CircleMap, Bounds, CircleCluster, OverlapItem, LayoutParameter, GradientLoss } from './interfaces';
+import { Area, Point, Circle, CircleMap, Bounds, CircleCluster, OverlapItem, LayoutParameter, GradientLoss } from '../interfaces';
 
 /** given a list of set objects, and their corresponding overlaps.
 updates the (x, y, radius) attribute on each set such that their positions

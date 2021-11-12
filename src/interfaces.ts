@@ -23,6 +23,13 @@ export interface Circle {
   size?: number;
 }
 
+export interface Arc {
+  circle: Circle;
+  width: number;
+  p1: Point;
+  p2: Point;
+}
+
 export interface Area {
   sets: string[];
   size: number;
