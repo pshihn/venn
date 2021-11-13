@@ -1,4 +1,4 @@
-import { Circle, Area } from './interfaces.js';
+import { Circle } from './interfaces.js';
 import { DiagramConfig, diagram } from './venn/diagram.js';
 
 interface SetElement {
@@ -8,6 +8,16 @@ interface SetElement {
   groupNode: SVGGElement;
 }
 
+export interface AreaDetails {
+  sets: string[];
+  size: number;
+  fill?: string;
+  opacity?: number;
+}
+
+const NS = 'http://www.w3.org/2000/svg';
+const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+
 export class VennDiagram extends HTMLElement {
   private _root: ShadowRoot;
   private __svg?: SVGSVGElement;
@@ -16,9 +26,11 @@ export class VennDiagram extends HTMLElement {
     height: 350,
     width: 600,
   };
-  private _areas: Area[] = [];
+  private _areas: AreaDetails[] = [];
+  private _areaMap = new Map<string, AreaDetails>();
   private _setList = new Set<SetElement>();
   private _setMap = new Map<string, SetElement>();
+  private _colorIndex = 0;
 
   constructor() {
     super();
@@ -41,10 +53,19 @@ export class VennDiagram extends HTMLElement {
     `;
   }
 
-  set sets(value: Area[]) {
+  set sets(value: AreaDetails[]) {
     value = value || [];
     if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
       this._areas = value;
+      this._areaMap.clear();
+      value.forEach((d) => {
+        this._areaMap.set(d.sets.join('|'), d);
+        d.size = d.size || 10;
+        d.fill = d.fill || this._nextColor();
+        if (typeof d.opacity !== 'number') {
+          d.opacity = 0.25;
+        }
+      });
       this._render();
     }
   }
@@ -55,6 +76,14 @@ export class VennDiagram extends HTMLElement {
       this.__svg = this._root.querySelector('svg')!;
     }
     return this.__svg;
+  }
+
+  private _nextColor(): string {
+    const color = COLORS[this._colorIndex++];
+    if (this._colorIndex >= COLORS.length) {
+      this._colorIndex = 0;
+    }
+    return color;
   }
 
   private _render() {
@@ -68,8 +97,8 @@ export class VennDiagram extends HTMLElement {
       const circle = circles[id];
       let se = this._setMap.get(id);
       if (!se) {
-        const g = svg.ownerDocument.createElementNS('http://www.w3.org/2000/svg', 'g');
-        const c = svg.ownerDocument.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const g = svg.ownerDocument.createElementNS(NS, 'g');
+        const c = svg.ownerDocument.createElementNS(NS, 'circle');
         c.setAttribute('id', `set-${id.toLowerCase().replace(' ', '')}`);
         g.appendChild(c);
         svg.appendChild(g);
@@ -86,7 +115,17 @@ export class VennDiagram extends HTMLElement {
 
       usedElements.add(se);
       se.circleNode.setAttribute('r', `${circle.radius}`);
-      se.groupNode.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
+      const g = se.groupNode;
+      g.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
+      const area = this._areaMap.get(id);
+      if (area) {
+        if (area.fill) {
+          g.style.fill = area.fill;
+        }
+        if (area.opacity) {
+          g.style.fillOpacity = `${area.opacity}`;
+        }
+      }
     }
 
     // set list cleanup
