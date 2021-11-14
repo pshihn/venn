@@ -5,7 +5,7 @@ import { AreaDetails } from './interfaces.js';
 
 export abstract class BaseElement extends HTMLElement {
   private _properties = new Set<string>();
-  private _connected = false;
+  protected _connected = false;
 
   attributeChangedCallback(name: string, _: string, newValue: string) {
     if (this._properties.has(name)) {
@@ -21,12 +21,14 @@ export abstract class BaseElement extends HTMLElement {
     return (this as any)[prop];
   }
 
+  protected _firePropChange = (prop: string) => {
+    if (this._connected) {
+      this.dispatchEvent(new PropChangeEvent(prop));
+    }
+  };
+
   protected _addProperties(o: HTMLElement, stringProps: string[], numProps: string[] = []) {
-    const fireChange = (prop: string) => {
-      if (this._connected) {
-        o.dispatchEvent(new PropChangeEvent(prop));
-      }
-    };
+    const fireChange = (prop: string) => this._firePropChange(prop);
     for (const prop of stringProps) {
       this._properties.add(prop);
       Object.defineProperty(o, prop, {

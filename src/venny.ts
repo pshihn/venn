@@ -1,5 +1,6 @@
 import './venn-diagram.js';
 import './venn-set';
+import './venn-intersection';
 
 // const sets: AreaDetails[] = [
 //   { sets: ['A'], size: 12 },
