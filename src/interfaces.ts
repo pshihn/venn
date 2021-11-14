@@ -36,6 +36,13 @@ export interface Area {
   weight?: number | undefined;
 }
 
+export interface AreaDetails {
+  sets: string[];
+  size: number;
+  fill?: string;
+  opacity?: number;
+}
+
 export interface OverlapItem {
   set: string;
   size: number;

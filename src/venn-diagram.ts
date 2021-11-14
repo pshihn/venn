@@ -1,5 +1,6 @@
-import { Circle } from './interfaces.js';
+import { Circle, AreaDetails } from './interfaces.js';
 import { DiagramConfig, diagram } from './venn/diagram.js';
+import { BaseElement } from './base-element';
 
 interface SetElement {
   id: string;
@@ -8,17 +9,11 @@ interface SetElement {
   groupNode: SVGGElement;
 }
 
-export interface AreaDetails {
-  sets: string[];
-  size: number;
-  fill?: string;
-  opacity?: number;
-}
-
 const NS = 'http://www.w3.org/2000/svg';
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
 
 export class VennDiagram extends HTMLElement {
+  private _connected = false;
   private _root: ShadowRoot;
   private __svg?: SVGSVGElement;
 
@@ -30,7 +25,7 @@ export class VennDiagram extends HTMLElement {
   private _areaMap = new Map<string, AreaDetails>();
   private _setList = new Set<SetElement>();
   private _setMap = new Map<string, SetElement>();
-  private _colorIndex = 0;
+  private _renderRequestPending = false;
 
   constructor() {
     super();
@@ -53,16 +48,79 @@ export class VennDiagram extends HTMLElement {
     `;
   }
 
-  set sets(value: AreaDetails[]) {
+  connectedCallback() {
+    this._connected = true;
+    this.addEventListener('area-add', this._areaChangeHandler);
+    this.addEventListener('prop-change', this._areaChangeHandler);
+    this._requestRender();
+  }
+
+  disconnectedCallback() {
+    this._connected = false;
+  }
+
+  private _areaKey(d: AreaDetails) {
+    return [d.sets].sort().join('|');
+  }
+
+  private _areaChangeHandler = (event: Event) => {
+    event.stopPropagation();
+    this._requestRender();
+  };
+
+  private _requestRender() {
+    if (this._connected && (!this._renderRequestPending)) {
+      this._renderRequestPending = true;
+      setTimeout(() => {
+        try {
+          if (this._connected) {
+            const areas: AreaDetails[] = [];
+            const children = this.children;
+            for (let i = 0; i < children.length; i++) {
+              if (children[i] instanceof BaseElement) {
+                const childAreas = (children[i] as BaseElement).computeAreas();
+                if (childAreas && childAreas.length) {
+                  areas.push(...childAreas);
+                }
+              }
+            }
+            this._renderData(areas);
+          }
+        } finally {
+          this._renderRequestPending = false;
+        }
+      }, 0);
+    }
+  }
+
+  private _renderData(value: AreaDetails[]) {
+    if (!this._connected) {
+      return;
+    }
     value = value || [];
+    let colorIndex = 0;
+    const nextColor = () => {
+      const color = COLORS[colorIndex++];
+      if (colorIndex >= COLORS.length) {
+        colorIndex = 0;
+      }
+      return color;
+    };
+
     if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
       this._areas = value;
       this._areaMap.clear();
       value.forEach((d) => {
-        this._areaMap.set(d.sets.join('|'), d);
-        d.size = d.size || 10;
-        d.fill = d.fill || this._nextColor();
-        if (typeof d.opacity !== 'number') {
+        this._areaMap.set(this._areaKey(d), d);
+        if (!d.size) {
+          if (d.sets.length === 1) {
+            d.size = 10;
+          } else if (d.sets.length > 1) {
+            d.size = 2;
+          }
+        }
+        d.fill = d.fill || nextColor();
+        if ((typeof d.opacity !== 'number') || isNaN(d.opacity)) {
           d.opacity = 0.25;
         }
       });
@@ -70,20 +128,13 @@ export class VennDiagram extends HTMLElement {
     }
   }
 
+
   private get _svg(): SVGSVGElement {
     if (!this.__svg) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       this.__svg = this._root.querySelector('svg')!;
     }
     return this.__svg;
-  }
-
-  private _nextColor(): string {
-    const color = COLORS[this._colorIndex++];
-    if (this._colorIndex >= COLORS.length) {
-      this._colorIndex = 0;
-    }
-    return color;
   }
 
   private _render() {
