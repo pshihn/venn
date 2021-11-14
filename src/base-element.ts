@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { PropChangeEvent } from './prop-change-event';
-import { AreaDetails } from './interfaces.js';
+import { AreaDetails, VennBaseElement } from './interfaces.js';
 
-export abstract class BaseElement extends HTMLElement {
+interface PendingEventListener {
+  type: string;
+  listener: EventListenerOrEventListenerObject;
+  options?: boolean | AddEventListenerOptions
+}
+
+export abstract class VennElement extends HTMLElement implements VennBaseElement {
   private _properties = new Set<string>();
   protected _connected = false;
+  private _svgNode?: SVGElement;
+  private _pendingEventListeners: PendingEventListener[] = [];
 
   attributeChangedCallback(name: string, _: string, newValue: string) {
     if (this._properties.has(name)) {
@@ -66,6 +74,31 @@ export abstract class BaseElement extends HTMLElement {
 
   disconnectedCallback(): void {
     this._connected = false;
+  }
+
+  private _addPendingSvgListeners() {
+    if (this._svgNode) {
+      for (const pl of this._pendingEventListeners) {
+        this._svgNode.addEventListener(pl.type, pl.listener, pl.options);
+      }
+      this._pendingEventListeners = [];
+    }
+  }
+
+  setSvgNode(node: SVGElement): void {
+    this._svgNode = node;
+    this._addPendingSvgListeners();
+  }
+
+  addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void {
+    this._pendingEventListeners.push({ type, listener, options });
+    this._addPendingSvgListeners();
+  }
+
+  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void {
+    if (this._svgNode) {
+      this._svgNode.removeEventListener(type, listener, options);
+    }
   }
 
   abstract computeAreas(): AreaDetails[];

@@ -36,11 +36,16 @@ export interface Area {
   weight?: number | undefined;
 }
 
+export interface VennBaseElement extends HTMLElement {
+  setSvgNode(node: SVGElement): void;
+}
+
 export interface AreaDetails {
   sets: string[];
   size: number;
   fill?: string;
   opacity?: number;
+  component?: VennBaseElement;
 }
 
 export interface OverlapItem {

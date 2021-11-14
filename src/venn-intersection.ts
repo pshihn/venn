@@ -1,10 +1,10 @@
-import { BaseElement } from './base-element';
+import { VennElement } from './base-element';
 import { AreaDetails } from './interfaces.js';
 
 const STRING_PROPS = ['fill', 'label'];
 const NUMERIC_PROPS = ['size', 'opacity'];
 
-export class VennSet extends BaseElement {
+export class VennSet extends VennElement {
   private _sets: string[] = [];
 
   static get observedAttributes() {
@@ -46,6 +46,7 @@ export class VennSet extends BaseElement {
           size: this._numValue('size') || 0,
           fill: this._stringValue('fill'),
           opacity: this._numValue('opacity'),
+          component: this,
         },
       ];
     }

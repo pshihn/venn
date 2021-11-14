@@ -1,10 +1,10 @@
-import { BaseElement } from './base-element';
+import { VennElement } from './base-element';
 import { AreaDetails } from './interfaces.js';
 
 const STRING_PROPS = ['name', 'fill', 'label'];
 const NUMERIC_PROPS = ['size', 'opacity'];
 
-export class VennSet extends BaseElement {
+export class VennSet extends VennElement {
   static get observedAttributes() {
     return [...STRING_PROPS, ...NUMERIC_PROPS];
   }
@@ -21,12 +21,13 @@ export class VennSet extends BaseElement {
         size: this._numValue('size') || 0,
         fill: this._stringValue('fill'),
         opacity: this._numValue('opacity'),
+        component: this,
       },
     ];
     const children = this.children;
     for (let i = 0; i < children.length; i++) {
-      if (children[i] instanceof BaseElement) {
-        const childAreas = (children[i] as BaseElement).computeAreas();
+      if (children[i] instanceof VennElement) {
+        const childAreas = (children[i] as VennElement).computeAreas();
         if (childAreas && childAreas.length) {
           areas.push(...childAreas);
         }

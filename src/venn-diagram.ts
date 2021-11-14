@@ -1,6 +1,6 @@
 import { Circle, AreaDetails } from './interfaces.js';
 import { DiagramConfig, diagram } from './venn/diagram.js';
-import { BaseElement } from './base-element';
+import { VennElement } from './base-element';
 
 interface SetElement {
   id: string;
@@ -77,8 +77,8 @@ export class VennDiagram extends HTMLElement {
             const areas: AreaDetails[] = [];
             const children = this.children;
             for (let i = 0; i < children.length; i++) {
-              if (children[i] instanceof BaseElement) {
-                const childAreas = (children[i] as BaseElement).computeAreas();
+              if (children[i] instanceof VennElement) {
+                const childAreas = (children[i] as VennElement).computeAreas();
                 if (childAreas && childAreas.length) {
                   areas.push(...childAreas);
                 }
@@ -175,6 +175,9 @@ export class VennDiagram extends HTMLElement {
         }
         if (area.opacity) {
           g.style.fillOpacity = `${area.opacity}`;
+        }
+        if (area.component) {
+          area.component.setSvgNode(se.groupNode);
         }
       }
     }
