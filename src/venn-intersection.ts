@@ -1,8 +1,8 @@
 import { VennElement } from './base-element';
 import { AreaDetails } from './interfaces.js';
 
-const STRING_PROPS = ['fill', 'label'];
-const NUMERIC_PROPS = ['size', 'opacity'];
+const STRING_PROPS = ['label'];
+const NUMERIC_PROPS = ['size'];
 
 export class VennSet extends VennElement {
   private _sets: string[] = [];

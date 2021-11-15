@@ -23,11 +23,29 @@ export interface Circle {
   size?: number;
 }
 
+export interface Intersection {
+  path: string;
+}
+
+export interface SetIntersection extends Intersection {
+  sets: string[];
+  size: number;
+}
+
 export interface Arc {
   circle: Circle;
   width: number;
   p1: Point;
   p2: Point;
+}
+
+export interface IntersectionStats {
+  area?: number;
+  arcArea?: number;
+  polygonArea?: number;
+  arcs: Arc[];
+  innerPoints?: Point[];
+  intersectionPoints?: Point[]
 }
 
 export interface Area {

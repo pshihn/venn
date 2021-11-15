@@ -1,11 +1,17 @@
-import { Circle, AreaDetails } from './interfaces.js';
-import { DiagramConfig, diagram } from './venn/diagram.js';
+import { Circle, AreaDetails, SetIntersection } from './interfaces.js';
+import { DiagramConfig, diagram, intersectionAreaPath } from './venn/diagram.js';
 import { VennElement } from './base-element';
 
-interface SetElement {
+interface CircleElement {
   id: string;
   circle: Circle;
   circleNode: SVGCircleElement;
+  groupNode: SVGGElement;
+}
+
+interface IntersectionElement extends SetIntersection {
+  id: string;
+  pathNode: SVGPathElement;
   groupNode: SVGGElement;
 }
 
@@ -21,10 +27,16 @@ export class VennDiagram extends HTMLElement {
     height: 350,
     width: 600,
   };
+
   private _areas: AreaDetails[] = [];
   private _areaMap = new Map<string, AreaDetails>();
-  private _setList = new Set<SetElement>();
-  private _setMap = new Map<string, SetElement>();
+
+  private _circleList = new Set<CircleElement>();
+  private _circleMap = new Map<string, CircleElement>();
+
+  private _nList = new Set<IntersectionElement>();
+  private _nMap = new Map<string, IntersectionElement>();
+
   private _renderRequestPending = false;
 
   constructor() {
@@ -59,8 +71,8 @@ export class VennDiagram extends HTMLElement {
     this._connected = false;
   }
 
-  private _areaKey(d: AreaDetails) {
-    return [d.sets].sort().join('|');
+  private _areaKey(d: AreaDetails | SetIntersection) {
+    return [...d.sets].sort().join('|');
   }
 
   private _areaChangeHandler = (event: Event) => {
@@ -119,9 +131,11 @@ export class VennDiagram extends HTMLElement {
             d.size = 2;
           }
         }
-        d.fill = d.fill || nextColor();
-        if ((typeof d.opacity !== 'number') || isNaN(d.opacity)) {
-          d.opacity = 0.25;
+        if (d.sets.length === 1) {
+          d.fill = d.fill || nextColor();
+          if ((typeof d.opacity !== 'number') || isNaN(d.opacity)) {
+            d.opacity = 0.25;
+          }
         }
       });
       this._render();
@@ -143,10 +157,16 @@ export class VennDiagram extends HTMLElement {
     svg.setAttribute('height', `${this._config.height || 350}`);
 
     const { circles } = diagram(this._areas, this._config);
-    const usedElements = new Set<SetElement>();
+    const usedCircles = new Set<CircleElement>();
+    const usedIntersections = new Set<IntersectionElement>();
+
+    // RENDER CIRCLES
+
     for (const id in circles) {
       const circle = circles[id];
-      let se = this._setMap.get(id);
+      // check if an element already exists for this id
+      // if not, render a node
+      let se = this._circleMap.get(id);
       if (!se) {
         const g = svg.ownerDocument.createElementNS(NS, 'g');
         const c = svg.ownerDocument.createElementNS(NS, 'circle');
@@ -159,12 +179,12 @@ export class VennDiagram extends HTMLElement {
           circleNode: c,
           groupNode: g,
         };
-        this._setMap.set(id, se);
+        this._circleMap.set(id, se);
       } else {
-        this._setList.delete(se);
+        this._circleList.delete(se);
       }
 
-      usedElements.add(se);
+      usedCircles.add(se);
       se.circleNode.setAttribute('r', `${circle.radius}`);
       const g = se.groupNode;
       g.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
@@ -181,16 +201,81 @@ export class VennDiagram extends HTMLElement {
         }
       }
     }
-
-    // set list cleanup
-    for (const se of this._setList) {
-      this._setMap.delete(se.id);
+    // Cleanup the list - remove unused shapes
+    for (const se of this._circleList) {
+      this._circleMap.delete(se.id);
       const gp = se.groupNode.parentElement;
       if (gp) {
         gp.removeChild(se.groupNode);
       }
     }
-    this._setList = usedElements;
+    this._circleList = usedCircles;
+
+    // RENDER INTERSECTIONS
+
+    const setIntersections: SetIntersection[] = [];
+    for (const area of this._areas) {
+      if (area.sets.length > 1) {
+        const setCircles = (area.sets.map((d) => this._circleMap.get(d)?.circle).filter((d) => !!d)) as Circle[];
+        const intersection = intersectionAreaPath(setCircles);
+        if (intersection) {
+          setIntersections.push({
+            sets: [...area.sets],
+            path: intersection.path,
+            size: area.size,
+          });
+        }
+      }
+    }
+    setIntersections.sort((a, b) => {
+      if (a.sets.length === b.sets.length) {
+        return b.size - a.size;
+      }
+      return a.sets.length - b.sets.length;
+    });
+    for (const intersection of setIntersections) {
+      const key = this._areaKey(intersection);
+      // check if shape element already exists
+      let intersectionElement = this._nMap.get(key);
+      if (intersectionElement) {
+        this._nList.delete(intersectionElement);
+      } else {
+        const g = svg.ownerDocument.createElementNS(NS, 'g');
+        const path = svg.ownerDocument.createElementNS(NS, 'path');
+        path.setAttribute('id', `intersection-${key.toLowerCase().replace('|', '-')}`);
+        g.appendChild(path);
+        svg.appendChild(g);
+        intersectionElement = {
+          id: key,
+          sets: [...intersection.sets],
+          path: intersection.path,
+          size: intersection.size,
+          groupNode: g,
+          pathNode: path,
+        };
+        this._nMap.set(key, intersectionElement);
+      }
+
+      usedIntersections.add(intersectionElement);
+      intersectionElement.pathNode.setAttribute('d', `${intersectionElement.path}`);
+      const g = intersectionElement.groupNode;
+      const area = this._areaMap.get(key);
+      if (area) {
+        g.style.fillOpacity = '0';
+        if (area.component) {
+          area.component.setSvgNode(intersectionElement.groupNode);
+        }
+      }
+    }
+    // Cleanup the list - remove unused shapes
+    for (const intersectionElement of this._nList) {
+      this._nMap.delete(intersectionElement.id);
+      const gp = intersectionElement.groupNode.parentElement;
+      if (gp) {
+        gp.removeChild(intersectionElement.groupNode);
+      }
+    }
+    this._nList = usedIntersections;
   }
 }
 customElements.define('venn-diagram', VennDiagram);

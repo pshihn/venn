@@ -14,8 +14,8 @@ export default [
   {
     input: 'bin/venny.js',
     output: {
-      file: `${outFolder}/venny.iife.js`,
-      format: 'iife'
+      file: `${outFolder}/venny.js`,
+      format: 'esm'
     },
     onwarn,
     plugins: [
