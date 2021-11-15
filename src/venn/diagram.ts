@@ -46,17 +46,17 @@ export function diagram(areas: Area[], config?: DiagramConfig) {
   });
 
   let circles: CircleMap = {};
-  let textCentres = new Map<string[], Point>();
+  let textCenters = new Map<string[], Point>();
   if (data.length) {
     let solution = venn(data, { lossFunction });
     if (_config.normalize) {
       solution = normalizeSolution(solution, _config.orientation, _config.orientationOrder);
       circles = scaleSolution(solution, _config.width, _config.height, _config.padding);
-      textCentres = computeTextCenters(circles, data);
+      textCenters = computeTextCenters(circles, data);
     }
   }
 
-  return { circles, textCentres };
+  return { circles, textCenters };
 }
 
 function getOverlappingCircles(circles: CircleMap) {
