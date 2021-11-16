@@ -110,14 +110,6 @@ export class VennDiagram extends HTMLElement {
       return;
     }
     value = value || [];
-    let colorIndex = 0;
-    const nextColor = () => {
-      const color = COLORS[colorIndex++];
-      if (colorIndex >= COLORS.length) {
-        colorIndex = 0;
-      }
-      return color;
-    };
 
     if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
       this._areas = value;
@@ -129,12 +121,6 @@ export class VennDiagram extends HTMLElement {
             d.size = 10;
           } else if (d.sets.length > 1) {
             d.size = 2;
-          }
-        }
-        if (d.sets.length === 1) {
-          d.fill = d.fill || nextColor();
-          if ((typeof d.opacity !== 'number') || isNaN(d.opacity)) {
-            d.opacity = 0.25;
           }
         }
       });
@@ -159,6 +145,15 @@ export class VennDiagram extends HTMLElement {
     const { circles } = diagram(this._areas, this._config);
     const usedCircles = new Set<CircleElement>();
     const usedIntersections = new Set<IntersectionElement>();
+
+    let colorIndex = 0;
+    const nextColor = () => {
+      const color = COLORS[colorIndex++];
+      if (colorIndex >= COLORS.length) {
+        colorIndex = 0;
+      }
+      return color;
+    };
 
     // RENDER CIRCLES
 
@@ -186,16 +181,12 @@ export class VennDiagram extends HTMLElement {
 
       usedCircles.add(se);
       se.circleNode.setAttribute('r', `${circle.radius}`);
-      const g = se.groupNode;
-      g.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
+      const { groupNode, circleNode } = se;
+      groupNode.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
+      circleNode.style.fill = nextColor();
+      circleNode.style.fillOpacity = '0.25';
       const area = this._areaMap.get(id);
       if (area) {
-        if (area.fill) {
-          g.style.fill = area.fill;
-        }
-        if (area.opacity) {
-          g.style.fillOpacity = `${area.opacity}`;
-        }
         if (area.component) {
           area.component.setSvgNode(se.groupNode);
         }
@@ -279,3 +270,9 @@ export class VennDiagram extends HTMLElement {
   }
 }
 customElements.define('venn-diagram', VennDiagram);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'venn-diagram': VennDiagram;
+  }
+}

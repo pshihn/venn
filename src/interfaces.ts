@@ -61,8 +61,7 @@ export interface VennBaseElement extends HTMLElement {
 export interface AreaDetails {
   sets: string[];
   size: number;
-  fill?: string;
-  opacity?: number;
+  label?: string;
   component?: VennBaseElement;
 }
 

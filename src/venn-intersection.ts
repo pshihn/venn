@@ -1,26 +1,34 @@
 import { VennElement } from './base-element';
 import { AreaDetails } from './interfaces.js';
 
-const STRING_PROPS = ['label'];
-const NUMERIC_PROPS = ['size'];
-
-export class VennSet extends VennElement {
+export class VennIntersection extends VennElement {
   private _sets: string[] = [];
+  private _label = '';
+  private _size = 0;
 
   static get observedAttributes() {
-    return [...STRING_PROPS, ...NUMERIC_PROPS, 'sets'];
+    return ['sets', 'size', 'label'];
   }
 
-  constructor() {
-    super();
-    this._addProperties(this, STRING_PROPS, NUMERIC_PROPS);
+  get label(): string {
+    return this._label;
   }
 
-  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (name === 'sets') {
-      this.sets = newValue;
-    } else {
-      super.attributeChangedCallback(name, oldValue, newValue);
+  set label(value: string) {
+    if (value !== this._label) {
+      this._label = value;
+      this._firePropChange('label');
+    }
+  }
+
+  get size(): number {
+    return this._size;
+  }
+
+  set size(value: number) {
+    if (value !== this._size) {
+      this._size = value;
+      this._firePropChange('size');
     }
   }
 
@@ -37,22 +45,33 @@ export class VennSet extends VennElement {
     this._firePropChange('sets');
   }
 
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (name === 'sets') {
+      this.sets = newValue;
+    } else {
+      super.attributeChangedCallback(name, oldValue, newValue);
+    }
+  }
+
   computeAreas(): AreaDetails[] {
     const sets = this.sets;
     if (sets.length > 1) {
       return [
         {
           sets: this.sets,
-          size: this._numValue('size') || 0,
-          fill: this._stringValue('fill'),
-          opacity: this._numValue('opacity'),
+          size: this.size,
+          label: this.label,
           component: this,
         },
       ];
     }
     return [];
   }
-
-
 }
-customElements.define('venn-n', VennSet);
+customElements.define('venn-n', VennIntersection);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'venn-n': VennIntersection;
+  }
+}
