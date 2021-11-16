@@ -1,4 +1,4 @@
-import { Circle, AreaDetails, SetIntersection } from './interfaces.js';
+import { Circle, AreaDetails, SetIntersection, Point } from './interfaces.js';
 import { DiagramConfig, diagram, intersectionAreaPath } from './venn/diagram.js';
 import { VennElement } from './base-element';
 
@@ -7,12 +7,14 @@ interface CircleElement {
   circle: Circle;
   circleNode: SVGCircleElement;
   groupNode: SVGGElement;
+  labelNode?: HTMLLabelElement;
 }
 
 interface IntersectionElement extends SetIntersection {
   id: string;
   pathNode: SVGPathElement;
   groupNode: SVGGElement;
+  labelNode?: HTMLLabelElement;
 }
 
 const NS = 'http://www.w3.org/2000/svg';
@@ -22,6 +24,7 @@ export class VennDiagram extends HTMLElement {
   private _connected = false;
   private _root: ShadowRoot;
   private __svg?: SVGSVGElement;
+  private __labels?: HTMLDivElement;
 
   private _config: DiagramConfig = {
     height: 350,
@@ -55,8 +58,25 @@ export class VennDiagram extends HTMLElement {
         display: block;
         border: 1px solid #000;
       }
+      #labels {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      #labels label {
+        position: absolute;
+        top: 0;
+        left: 0;
+        font-size: var(--venn-label-size, 15px);
+        font-family: var(--venn-label-font-family, system-ui, sans-serif);
+        font-weight: var(--venn-label-font-weight, 400);
+      }
     </style>
     <svg></svg>
+    <div id="labels"></div>
     `;
   }
 
@@ -72,7 +92,7 @@ export class VennDiagram extends HTMLElement {
   }
 
   private _areaKey(d: AreaDetails | SetIntersection) {
-    return [...d.sets].sort().join('|');
+    return [...d.sets].sort().join(',');
   }
 
   private _areaChangeHandler = (event: Event) => {
@@ -137,12 +157,42 @@ export class VennDiagram extends HTMLElement {
     return this.__svg;
   }
 
+  private get _labels(): HTMLDivElement {
+    if (!this.__labels) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.__labels = this._root.querySelector('#labels')!;
+    }
+    return this.__labels;
+  }
+
+  private _renderLabel(area: AreaDetails, textCenters: Map<string, Point>, se: CircleElement | IntersectionElement, color: string) {
+    const labels = this._labels;
+    let labelNode = se.labelNode;
+    if (area.label) {
+      if (!labelNode) {
+        labelNode = document.createElement('label');
+        labelNode.style.color = color;
+        se.labelNode = labelNode;
+        labels.appendChild(labelNode);
+      }
+      labelNode.textContent = area.label;
+      const centerPoint = textCenters.get(this._areaKey(area)) || { x: 0, y: 0 };
+      labelNode.style.transform = `translate3d(-50%, -50%, 0) translate3d(${centerPoint.x}px, ${centerPoint.y}px, 0px)`;
+    } else {
+      if (labelNode) {
+        labels.removeChild(labelNode);
+        se.labelNode = undefined;
+      }
+    }
+  }
+
   private _render() {
     const svg = this._svg;
     svg.setAttribute('width', `${this._config.width || 600}`);
     svg.setAttribute('height', `${this._config.height || 350}`);
 
-    const { circles } = diagram(this._areas, this._config);
+    const { circles, textCenters } = diagram(this._areas, this._config);
+    console.log({ circles, textCenters });
     const usedCircles = new Set<CircleElement>();
     const usedIntersections = new Set<IntersectionElement>();
 
@@ -155,7 +205,9 @@ export class VennDiagram extends HTMLElement {
       return color;
     };
 
+    // **********************
     // RENDER CIRCLES
+    // **********************
 
     for (const id in circles) {
       const circle = circles[id];
@@ -190,6 +242,7 @@ export class VennDiagram extends HTMLElement {
         if (area.component) {
           area.component.setSvgNode(se.groupNode);
         }
+        this._renderLabel(area, textCenters, se, circleNode.style.fill);
       }
     }
     // Cleanup the list - remove unused shapes
@@ -202,7 +255,9 @@ export class VennDiagram extends HTMLElement {
     }
     this._circleList = usedCircles;
 
+    // **********************
     // RENDER INTERSECTIONS
+    // **********************
 
     const setIntersections: SetIntersection[] = [];
     for (const area of this._areas) {
@@ -233,7 +288,7 @@ export class VennDiagram extends HTMLElement {
       } else {
         const g = svg.ownerDocument.createElementNS(NS, 'g');
         const path = svg.ownerDocument.createElementNS(NS, 'path');
-        path.setAttribute('id', `intersection-${key.toLowerCase().replace('|', '-')}`);
+        path.setAttribute('id', `intersection-${key.toLowerCase().replace(',', '-')}`);
         g.appendChild(path);
         svg.appendChild(g);
         intersectionElement = {
@@ -256,6 +311,7 @@ export class VennDiagram extends HTMLElement {
         if (area.component) {
           area.component.setSvgNode(intersectionElement.groupNode);
         }
+        this._renderLabel(area, textCenters, intersectionElement, '');
       }
     }
     // Cleanup the list - remove unused shapes

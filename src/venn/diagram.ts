@@ -46,7 +46,7 @@ export function diagram(areas: Area[], config?: DiagramConfig) {
   });
 
   let circles: CircleMap = {};
-  let textCenters = new Map<string[], Point>();
+  let textCenters = new Map<string, Point>();
   if (data.length) {
     let solution = venn(data, { lossFunction });
     if (_config.normalize) {
@@ -82,8 +82,12 @@ function getOverlappingCircles(circles: CircleMap) {
   return ret;
 }
 
+function areaKey(ids: string[]): string {
+  return [...ids].sort().join(',');
+}
+
 function computeTextCenters(circles: CircleMap, areas: Area[]) {
-  const ret = new Map<string[], Point>();
+  const ret = new Map<string, Point>();
   const overlapped = getOverlappingCircles(circles);
   for (let i = 0; i < areas.length; ++i) {
     const area = areas[i].sets;
@@ -110,7 +114,7 @@ function computeTextCenters(circles: CircleMap, areas: Area[]) {
       }
     }
     const centre = computeTextCenter(interior, exterior);
-    ret.set(area, centre);
+    ret.set(areaKey(area), centre);
     if (centre.disjoint && (areas[i].size > 0)) {
       // TODO:
       // console.log("WARNING: area " + area + " not represented on screen");
