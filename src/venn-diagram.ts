@@ -165,7 +165,7 @@ export class VennDiagram extends HTMLElement {
     return this.__labels;
   }
 
-  private _renderLabel(area: AreaDetails, textCenters: Map<string, Point>, se: CircleElement | IntersectionElement, color: string) {
+  private _renderLabel(area: AreaDetails, textCenters: Map<string, Point>, se: CircleElement | IntersectionElement, color: string, maxWidth?: number) {
     const labels = this._labels;
     let labelNode = se.labelNode;
     if (area.label) {
@@ -178,6 +178,7 @@ export class VennDiagram extends HTMLElement {
       labelNode.textContent = area.label;
       const centerPoint = textCenters.get(this._areaKey(area)) || { x: 0, y: 0 };
       labelNode.style.transform = `translate3d(-50%, -50%, 0) translate3d(${centerPoint.x}px, ${centerPoint.y}px, 0px)`;
+      labelNode.style.maxWidth = maxWidth ? `${maxWidth}px` : '12em';
     } else {
       if (labelNode) {
         labels.removeChild(labelNode);
@@ -192,7 +193,6 @@ export class VennDiagram extends HTMLElement {
     svg.setAttribute('height', `${this._config.height || 350}`);
 
     const { circles, textCenters } = diagram(this._areas, this._config);
-    console.log({ circles, textCenters });
     const usedCircles = new Set<CircleElement>();
     const usedIntersections = new Set<IntersectionElement>();
 
@@ -242,7 +242,8 @@ export class VennDiagram extends HTMLElement {
         if (area.component) {
           area.component.setSvgNode(se.groupNode);
         }
-        this._renderLabel(area, textCenters, se, circleNode.style.fill);
+        const maxWidth = Math.max(100, se.circle.radius * 2 * 0.6);
+        this._renderLabel(area, textCenters, se, circleNode.style.fill, maxWidth);
       }
     }
     // Cleanup the list - remove unused shapes
