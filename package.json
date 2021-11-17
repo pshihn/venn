@@ -1,6 +1,6 @@
 {
   "name": "venny",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Declarative Venn diagrams",
   "main": "bin/venny.js",
   "module": "bin/venny.js",

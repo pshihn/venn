@@ -70,6 +70,7 @@ export class VennDiagram extends HTMLElement {
         position: absolute;
         top: 0;
         left: 0;
+        user-select: none;
         font-size: var(--venn-label-size, 15px);
         font-family: var(--venn-label-font-family, system-ui, sans-serif);
         font-weight: var(--venn-label-font-weight, 400);
@@ -133,6 +134,7 @@ export class VennDiagram extends HTMLElement {
 
     if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
       this._areas = value;
+      console.log({ value });
       this._areaMap.clear();
       value.forEach((d) => {
         this._areaMap.set(this._areaKey(d), d);
