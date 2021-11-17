@@ -56,7 +56,6 @@ export class VennDiagram extends HTMLElement {
       }
       svg {
         display: block;
-        border: 1px solid #000;
       }
       #labels {
         position: absolute;
