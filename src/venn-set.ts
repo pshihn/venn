@@ -4,7 +4,7 @@ import { AreaDetails } from './interfaces.js';
 export class VennSet extends VennElement {
   private _name = '';
   private _label = '';
-  private _size = 10;
+  protected _size = 10;
 
   static get observedAttributes() {
     return ['name', 'size', 'label'];
@@ -32,17 +32,6 @@ export class VennSet extends VennElement {
     }
   }
 
-  get size(): number {
-    return this._size;
-  }
-
-  set size(value: number) {
-    if (value !== this._size) {
-      this._size = value;
-      this._firePropChange('size');
-    }
-  }
-
   computeAreas(): AreaDetails[] {
     const areas: AreaDetails[] = [
       {
@@ -53,11 +42,25 @@ export class VennSet extends VennElement {
       },
     ];
     const children = this.children;
+    let setChildren = 0;
     for (let i = 0; i < children.length; i++) {
       if (children[i] instanceof VennSet) {
-        const childSet = (children[i] as VennSet);
+        setChildren++;
+      }
+    }
+    for (let i = 0; i < children.length; i++) {
+      if (children[i] instanceof VennElement) {
+        const childSet = (children[i] as VennElement);
         if (childSet.size >= this.size) {
-          childSet.size = 0.5 * this.size;
+          switch (setChildren) {
+            case 0:
+            case 1:
+              childSet.size = this.size / 2;
+              break;
+            default:
+              childSet.size = this.size / ((setChildren + 1) * 2);
+              break;
+          }
         }
         const childAreas = childSet.computeAreas();
         if (childAreas && childAreas.length) {

@@ -13,6 +13,18 @@ export abstract class VennElement extends HTMLElement implements VennBaseElement
   private _connected = false;
   private _svgNode?: SVGElement;
   private _pendingEventListeners: PendingEventListener[] = [];
+  protected _size = 0;
+
+  get size(): number {
+    return this._size;
+  }
+
+  set size(value: number) {
+    if (value !== this._size) {
+      this._size = value;
+      this._firePropChange('size');
+    }
+  }
 
   attributeChangedCallback(name: string, _: string, newValue: string) {
     (this as any)[name] = newValue;

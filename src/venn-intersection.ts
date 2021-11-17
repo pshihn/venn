@@ -4,7 +4,7 @@ import { AreaDetails } from './interfaces.js';
 export class VennIntersection extends VennElement {
   private _sets: string[] = [];
   private _label = '';
-  private _size = 2;
+  protected _size = 2;
 
   static get observedAttributes() {
     return ['sets', 'size', 'label'];
@@ -18,17 +18,6 @@ export class VennIntersection extends VennElement {
     if (value !== this._label) {
       this._label = value;
       this._firePropChange('label');
-    }
-  }
-
-  get size(): number {
-    return this._size;
-  }
-
-  set size(value: number) {
-    if (value !== this._size) {
-      this._size = value;
-      this._firePropChange('size');
     }
   }
 
