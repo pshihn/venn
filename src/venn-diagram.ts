@@ -7,6 +7,7 @@ interface CircleElement {
   circle: Circle;
   circleNode: SVGCircleElement;
   groupNode: SVGGElement;
+  styleNode: SVGStyleElement;
   labelNode?: HTMLLabelElement;
 }
 
@@ -14,6 +15,7 @@ interface IntersectionElement extends SetIntersection {
   id: string;
   pathNode: SVGPathElement;
   groupNode: SVGGElement;
+  styleNode: SVGStyleElement;
   labelNode?: HTMLLabelElement;
 }
 
@@ -214,10 +216,12 @@ export class VennDiagram extends HTMLElement {
       // check if an element already exists for this id
       // if not, render a node
       let se = this._circleMap.get(id);
+      const circleId = `circle-${id.toLowerCase().replace(' ', '')}`;
       if (!se) {
         const g = svg.ownerDocument.createElementNS(NS, 'g');
         const c = svg.ownerDocument.createElementNS(NS, 'circle');
-        c.setAttribute('id', `set-${id.toLowerCase().replace(' ', '')}`);
+        const svgStyle = svg.ownerDocument.createElementNS(NS, 'style');
+        g.appendChild(svgStyle);
         g.appendChild(c);
         svg.appendChild(g);
         se = {
@@ -225,25 +229,41 @@ export class VennDiagram extends HTMLElement {
           circle,
           circleNode: c,
           groupNode: g,
+          styleNode: svgStyle,
         };
         this._circleMap.set(id, se);
       } else {
         this._circleList.delete(se);
       }
-
       usedCircles.add(se);
-      se.circleNode.setAttribute('r', `${circle.radius}`);
-      const { groupNode, circleNode } = se;
+
+      // Update nodes with data
+      const { groupNode, circleNode, styleNode } = se;
+      const color = nextColor();
+      circleNode.setAttribute('id', circleId);
       groupNode.setAttribute('transform', `translate(${circle.x} ${circle.y})`);
-      circleNode.style.fill = nextColor();
-      circleNode.style.fillOpacity = '0.25';
+      circleNode.setAttribute('r', `${circle.radius}`);
+      styleNode.textContent = `
+#${circleId} {
+  fill: var(--venn-${circleId}-fill, ${color});
+  fill-opacity: var(--venn-${circleId}-fill-opacity, var(--venn-circle-fill-opacity, 0.25));
+  stroke: var(--venn-${circleId}-stroke, var(--venn-circle-stroke));
+  stroke-width: var(--venn-${circleId}-stroke-width, var(--venn-circle-stroke-width));
+}
+#${circleId}:hover {
+  fill: var(--venn-hover-${circleId}-fill, var(--venn-${circleId}-fill, ${color}));
+  fill-opacity: var(--venn-hover-${circleId}-fill-opacity, var(--venn-hover-circle-fill-opacity, var(--venn-${circleId}-fill-opacity, var(--venn-circle-fill-opacity, 0.25))));
+  stroke: var(--venn-hover-${circleId}-stroke, var(--venn-hover-circle-stroke, var(--venn-${circleId}-stroke, var(--venn-circle-stroke))));
+  stroke-width: var(--venn-hover-${circleId}-stroke-width, var(--venn-hover-circle-stroke-width, var(--venn-${circleId}-stroke-width, var(--venn-circle-stroke-width))));
+}
+      `;
       const area = this._areaMap.get(id);
       if (area) {
         if (area.component) {
           area.component.setSvgNode(se.groupNode);
         }
         const maxWidth = Math.max(100, se.circle.radius * 2 * 0.6);
-        this._renderLabel(area, textCenters, se, circleNode.style.fill, maxWidth);
+        this._renderLabel(area, textCenters, se, color, maxWidth);
       }
     }
     // Cleanup the list - remove unused shapes
@@ -282,6 +302,7 @@ export class VennDiagram extends HTMLElement {
     });
     for (const intersection of setIntersections) {
       const key = this._areaKey(intersection);
+      const pathId = `intersection-${key.toLowerCase().replace(',', '-')}`;
       // check if shape element already exists
       let intersectionElement = this._nMap.get(key);
       if (intersectionElement) {
@@ -289,7 +310,8 @@ export class VennDiagram extends HTMLElement {
       } else {
         const g = svg.ownerDocument.createElementNS(NS, 'g');
         const path = svg.ownerDocument.createElementNS(NS, 'path');
-        path.setAttribute('id', `intersection-${key.toLowerCase().replace(',', '-')}`);
+        const svgStyle = svg.ownerDocument.createElementNS(NS, 'style');
+        g.appendChild(svgStyle);
         g.appendChild(path);
         svg.appendChild(g);
         intersectionElement = {
@@ -299,16 +321,29 @@ export class VennDiagram extends HTMLElement {
           size: intersection.size,
           groupNode: g,
           pathNode: path,
+          styleNode: svgStyle,
         };
         this._nMap.set(key, intersectionElement);
       }
 
       usedIntersections.add(intersectionElement);
-      intersectionElement.pathNode.setAttribute('d', `${intersectionElement.path}`);
-      const g = intersectionElement.groupNode;
+      const { groupNode, styleNode, pathNode } = intersectionElement;
+      groupNode.style.fillOpacity = '0';
+      pathNode.setAttribute('id', pathId);
+      pathNode.setAttribute('d', `${intersectionElement.path}`);
+      styleNode.textContent = `
+#${pathId} {
+  stroke: var(--venn-${pathId}-stroke, var(--venn-intersection-stroke));
+  stroke-width: var(--venn-${pathId}-stroke-width, var(--venn-intersection-stroke-width));
+}
+#${pathId}:hover {
+  stroke: var(--venn-hover-${pathId}-stroke, var(--venn-hover-intersection-stroke, var(--venn-${pathId}-stroke, var(--venn-intersection-stroke))));
+  stroke-width: var(--venn-hover-${pathId}-stroke-width, var(--venn-hover-intersection-stroke-width, var(--venn-${pathId}-stroke-width, var(--venn-intersection-stroke-width))));
+}
+      `;
+
       const area = this._areaMap.get(key);
       if (area) {
-        g.style.fillOpacity = '0';
         if (area.component) {
           area.component.setSvgNode(intersectionElement.groupNode);
         }
