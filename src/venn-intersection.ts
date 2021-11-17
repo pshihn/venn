@@ -3,22 +3,10 @@ import { AreaDetails } from './interfaces.js';
 
 export class VennIntersection extends VennElement {
   private _sets: string[] = [];
-  private _label = '';
   protected _size = 2;
 
   static get observedAttributes() {
     return ['sets', 'size', 'label'];
-  }
-
-  get label(): string {
-    return this._label;
-  }
-
-  set label(value: string) {
-    if (value !== this._label) {
-      this._label = value;
-      this._firePropChange('label');
-    }
   }
 
   get sets(): string[] {

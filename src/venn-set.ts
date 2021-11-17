@@ -3,22 +3,10 @@ import { AreaDetails } from './interfaces.js';
 
 export class VennSet extends VennElement {
   private _name = '';
-  private _label = '';
   protected _size = 10;
 
   static get observedAttributes() {
     return ['name', 'size', 'label'];
-  }
-
-  get label(): string {
-    return this._label;
-  }
-
-  set label(value: string) {
-    if (value !== this._label) {
-      this._label = value;
-      this._firePropChange('label');
-    }
   }
 
   get name(): string {

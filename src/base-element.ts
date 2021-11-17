@@ -14,6 +14,7 @@ export abstract class VennElement extends HTMLElement implements VennBaseElement
   private _svgNode?: SVGElement;
   private _pendingEventListeners: PendingEventListener[] = [];
   protected _size = 0;
+  private _label = '';
 
   get size(): number {
     return this._size;
@@ -23,6 +24,17 @@ export abstract class VennElement extends HTMLElement implements VennBaseElement
     if (value !== this._size) {
       this._size = value;
       this._firePropChange('size');
+    }
+  }
+
+  get label(): string {
+    return this._label;
+  }
+
+  set label(value: string) {
+    if (value !== this._label) {
+      this._label = value;
+      this._firePropChange('label');
     }
   }
 
