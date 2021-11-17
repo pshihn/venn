@@ -1,12 +1,13 @@
 {
   "name": "venny",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Declarative Venn diagrams",
-  "main": "bin/venny.js",
-  "module": "bin/venny.js",
+  "main": "bin/venny.esm.js",
+  "module": "bin/venny.esm.js",
   "type": "module",
+  "types": "bin/venny.d.ts",
   "scripts": {
-    "build": "rm -rf bin && tsc",
+    "build": "rm -rf bin && tsc && rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,9 +26,11 @@
   },
   "homepage": "https://github.com/pshihn/venn#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.3.1",
-    "@typescript-eslint/parser": "^5.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",
-    "typescript": "^4.4.4"
+    "rollup": "^2.60.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.5.2"
   }
 }
