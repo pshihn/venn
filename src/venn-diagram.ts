@@ -127,6 +127,20 @@ export class VennDiagram extends HTMLElement {
     }
   }
 
+  private _findSubsets(arr: string[], data: string[], start: number, end: number, index: number, r: number, out: string[][]) {
+    if (index === r) {
+      const temp: string[] = [];
+      for (let j = 0; j < r; j++) {
+        temp.push(data[j]);
+      }
+      out.push(temp);
+    }
+    for (let i = start; i <= end && end - i + 1 >= r - index; i++) {
+      data[index] = arr[i];
+      this._findSubsets(arr, data, i + 1, end, index + 1, r, out);
+    }
+  }
+
   private _renderData(value: AreaDetails[]) {
     if (!this._connected) {
       return;
@@ -146,6 +160,30 @@ export class VennDiagram extends HTMLElement {
           }
         }
       });
+
+      // Add missing intersections
+      for (const area of this._areas) {
+        const length = area.sets.length;
+        if (length > 2) {
+          const out: string[][] = [];
+          for (let r = 2; r < length; r++) {
+            const data = new Array<string>(r);
+            this._findSubsets(area.sets, data, 0, length - 1, 0, r, out);
+          }
+          for (const subset of out) {
+            const key = subset.join(',');
+            if (!this._areaMap.has(key)) {
+              const missingArea: AreaDetails = {
+                sets: [...subset],
+                size: area.size,
+              };
+              this._areas.push(missingArea);
+              this._areaMap.set(key, missingArea);
+            }
+          }
+        }
+      }
+
       this._render();
     }
   }

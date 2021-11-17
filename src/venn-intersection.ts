@@ -35,7 +35,7 @@ export class VennIntersection extends VennElement {
     if (sets.length > 1) {
       return [
         {
-          sets: this.sets,
+          sets: [...this.sets].sort(),
           size: this.size,
           label: this.label,
           component: this,
