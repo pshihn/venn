@@ -133,7 +133,6 @@ export class VennDiagram extends HTMLElement {
 
     if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
       this._areas = value;
-      console.log({ value });
       this._areaMap.clear();
       value.forEach((d) => {
         this._areaMap.set(this._areaKey(d), d);

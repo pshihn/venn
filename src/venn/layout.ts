@@ -417,7 +417,7 @@ export function lossFunction(sets: CircleMap, overlaps: Area[]): number {
   let output = 0;
 
   const getCircles = (indices: string[]) => {
-    return indices.map((i) => { return sets[i]; });
+    return indices.map((i) => { return sets[i]; }).filter((d) => !!d);
   };
 
   for (let i = 0; i < overlaps.length; ++i) {
