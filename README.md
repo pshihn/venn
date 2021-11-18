@@ -4,6 +4,7 @@ Venny is a set of custom elements used to show Venn Diagrams on a web page. Thes
 
 Venny is based on [venn.js](https://github.com/benfred/venn.js/) which provides the algorithms to layout area proportional Venn and Euler diagrams. 
 
+*Venny is good for area proportional diagrams with as many sets but not very good when the intersections are of more than three sets. *
 
 ## Usage
 
