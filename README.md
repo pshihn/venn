@@ -145,3 +145,51 @@ When you need to show that a Set is a subset of another one, you can create an i
 ```
 ![Screen Shot 2021-11-17 at 11 11 15 PM](https://user-images.githubusercontent.com/833927/142369233-21eb4005-fcec-4a4a-a9e1-605c8a6f565e.png)
 
+
+## Styling 
+
+Venny exposes custom CSS properties to style the diagrams. Color, opacity of the set fill, stroke colors can be specified for the normal and the `hover` states. 
+
+### Styling Circles
+
+**Fill Color:** A dynamic color is assigned to each circle. But this can be overriden by setting the css property `--venn-circle-[name]-fill` where name is the name of the set in lower-case. e.g. `--venn-circle-apples-fill: red;`
+
+A corersponding property `--venn-hover-[name]-fill` can be set to change the color of the set when the user hovers over the set. 
+
+**Fill Opacity:** By default all circles are filled with an opacity of `0.25`. Having a translucent fill easily shows the intersections between the sets. However the default value of this can be set by setting the `--venn-circle-fill-opacity` property. To change the fill opacity only of a specific set you can set the `--venn-circle-[name]-fill-opacity` property by substituting `[name]` with the name of the set in lower-case. 
+
+Corresponding hover properties are `--venn-hover-circle-fill-opacity` and `--venn-hover-circle-[name]-fill-opacity` to change the opacity on hover. 
+
+**Stroke:** Circles are not drawn without any stroke (outline). But circle stroke color, size can be set using following properties:
+
+`--venn-circle-stroke` to set the color of the stroke of all circles. `--venn-circle-[name]-stroke` to set the stroke color of a specific set. 
+
+`--venn-circle-stroke-width` to set the width of the stroke of all circles. `--venn-circle-[name]-stroke-width` to set the stroke width of a specific set. 
+
+Replace `--venn-` with `--venn-hover-` in these styles to set these when hovered. 
+
+### Styling Intersections
+
+Intersection strokes can be set using `--venn-intersection-stroke` and `--venn-intersection-stroke-width` prroperties. 
+
+To set stroke on a specific intersection specify the intersecting set names in lower case, separated by a `-`
+e.g. `--venn-intersection-a-b-stroke` sets the stroke color only of the intersection of Sets A and B.
+
+Replace `--venn-` with `--venn-hover-` in these styles to set these when hovered. 
+
+### Styling Labels
+
+By default labels use the same color as their corresponding sets but with full opacity. Intersection labels are black by default. 
+
+`--venn-label-color` can be set to set the color of all labels. 
+
+`--venn-label-[name]-color` to set the label color of a specific set or intersection. e.g `--venn-label-a-b-color` sets the label color of the intersection of sets A, B
+
+Following properties cannot be set on a set specifc levl at the moment:
+
+`--venn-label-size` sets the font size of the label.
+
+`--venn-label-font-family` sets which Font you'd like to use for the labels.
+
+`--venn-label-font-weight` sets the font weight which defaults to normal / 400. 
+
