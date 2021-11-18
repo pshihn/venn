@@ -253,7 +253,7 @@ export class VennDiagram extends HTMLElement {
         se.labelNode = labelNode;
         labels.appendChild(labelNode);
       }
-      labelNode.style.color = `var(--venn-label-${this._areaKey(area).toLowerCase().replace(' ', '')}-color, var(--venn-label-color, ${color}))`;
+      labelNode.style.color = `var(--venn-label-${this._areaKey(area).toLowerCase().replace(',', '-')}-color, var(--venn-label-color, ${color}))`;
       labelNode.textContent = area.label;
       const centerPoint = textCenters.get(this._areaKey(area)) || { x: 0, y: 0 };
       labelNode.style.transform = `translate3d(-50%, -50%, 0) translate3d(${centerPoint.x}px, ${centerPoint.y}px, 0px)`;
