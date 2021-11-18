@@ -193,3 +193,8 @@ Following properties cannot be set on a set specifc levl at the moment:
 
 `--venn-label-font-weight` sets the font weight which defaults to normal / 400. 
 
+## Support
+
+If you like my whimsical open source projects like this one, you can show some love by sponsoring me https://github.com/sponsors/pshihn 
+Or just Tweet at me to show your love, that's equally appreciated :)
+
