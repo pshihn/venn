@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venny</title>
+  <meta name="description" content="Venny is a light weight javascript library that lets you draw graphics with a hand-drawn, sketchy, appearance.">
+
+  <link rel="icon" href="/images/fav.png" type="image/png">
+
+  <style>
+    body {
+      margin: 0;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Ubuntu, Roboto, Noto, "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: subpixel-antialiased;
+      line-height: 1.5;
+      color: #606c71;
+    }
+    a, a:hover, a:visited {
+      color: #155799;
+      outline: none;
+      text-decoration: none;
+    }
+    a.buttonLink {
+      border: 2px solid #155799;
+      padding: 10px;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: inline-block;
+      margin: 1em 0;
+      border-radius: 8px;
+    }
+    main {
+      padding: 16px 12px;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+    }
+    pre,
+    code {
+      font-family: Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace;
+      line-height: 1.5;
+      font-size: 14px;
+      background: #f0f0f0;
+    }
+    pre {
+      font-size: 14px;
+      line-height: 1.375;
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      word-spacing: normal;
+      word-break: normal;
+      -moz-tab-size: 2;
+      -o-tab-size: 2;
+      tab-size: 2;
+      -webkit-hyphens: none;
+      -moz-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+      padding: 1em;
+      margin: .5em 0;
+      background-color: #f6f6f6;
+    }
+    main pre[class*="language-"] {
+      margin: 0 0 2em;
+    }
+    figure {
+      margin: 0;
+    }
+    h1, h2 {
+      color: #B00020;
+      margin: 1rem 0;
+      font-weight: normal;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    h1 {
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      font-size: 30px;
+    }
+
+    @media(hover: hover) {
+      a:hover {
+        box-shadow: 0 2px;
+      }
+      a.buttonLink:hover {
+        box-shadow: none;
+      }
+    }
+    
+    @media(max-width: 600px) {
+      pre[class*="language-"] {
+        padding: 0.5em;
+      }
+      code[class*="language-"],
+      pre[class*="language-"] {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="{{ '/css/prism-vs.css' | url }}">
+  <script async src="/scripts/venny.js"></script>
+</head>
+
+<body>
+  <article>
+    <main>
+    {{ content | safe }}
+    </main>
+  </article>
+  <script type="module">
+    setTimeout(() => {
+      document.querySelectorAll('#eventExampleDiagram venn-set').forEach((d) => {
+        d.addEventListener('click', () => {
+          window.alert(`Clicked on ${d.label}`);
+        });
+      });
+      document.querySelectorAll('#eventExampleDiagram venn-n').forEach((d) => {
+        d.addEventListener('click', () => {
+          window.alert(`Clicked intersection for ${d.sets}`);
+        });
+      });
+    }, 1000);
+  </script>
+</body>
+
+</html>

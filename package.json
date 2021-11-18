@@ -4,9 +4,10 @@
   "description": "Declarative Venn diagrams",
   "main": "bin/venny.esm.js",
   "module": "bin/venny.esm.js",
-  "type": "module",
   "types": "bin/venny.d.ts",
   "scripts": {
+    "serve": "npx eleventy --serve",
+    "build-site": "npx eleventy",
     "build": "rm -rf bin && tsc && rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +27,8 @@
   },
   "homepage": "https://github.com/pshihn/venn#readme",
   "devDependencies": {
+    "@11ty/eleventy": "^0.12.1",
+    "@11ty/eleventy-plugin-syntaxhighlight": "^3.1.3",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "eslint": "^8.2.0",

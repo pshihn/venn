@@ -1,1 +1,243 @@
-<p>Hello world</p>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venny</title>
+  <meta name="description" content="Venny is a light weight javascript library that lets you draw graphics with a hand-drawn, sketchy, appearance.">
+
+  <link rel="icon" href="/images/fav.png" type="image/png">
+
+  <style>
+    body {
+      margin: 0;
+      font-weight: 400;
+      font-size: 18px;
+      font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Ubuntu, Roboto, Noto, "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: subpixel-antialiased;
+      line-height: 1.5;
+      color: #606c71;
+    }
+    a, a:hover, a:visited {
+      color: #155799;
+      outline: none;
+      text-decoration: none;
+    }
+    a.buttonLink {
+      border: 2px solid #155799;
+      padding: 10px;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      display: inline-block;
+      margin: 1em 0;
+      border-radius: 8px;
+    }
+    main {
+      padding: 16px 12px;
+      max-width: 700px;
+      margin: 0 auto;
+      position: relative;
+    }
+    pre,
+    code {
+      font-family: Consolas, Menlo, Monaco, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", "Courier New", Courier, monospace;
+      line-height: 1.5;
+      font-size: 14px;
+      background: #f0f0f0;
+    }
+    pre {
+      font-size: 14px;
+      line-height: 1.375;
+      direction: ltr;
+      text-align: left;
+      white-space: pre;
+      word-spacing: normal;
+      word-break: normal;
+      -moz-tab-size: 2;
+      -o-tab-size: 2;
+      tab-size: 2;
+      -webkit-hyphens: none;
+      -moz-hyphens: none;
+      -ms-hyphens: none;
+      hyphens: none;
+      padding: 1em;
+      margin: .5em 0;
+      background-color: #f6f6f6;
+    }
+    main pre[class*="language-"] {
+      margin: 0 0 2em;
+    }
+    figure {
+      margin: 0;
+    }
+    h1, h2 {
+      color: #B00020;
+      margin: 1rem 0;
+      font-weight: normal;
+      font-size: 28px;
+      letter-spacing: 1px;
+    }
+    h1 {
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      font-size: 30px;
+    }
+
+    @media(hover: hover) {
+      a:hover {
+        box-shadow: 0 2px;
+      }
+      a.buttonLink:hover {
+        box-shadow: none;
+      }
+    }
+    
+    @media(max-width: 600px) {
+      pre[class*="language-"] {
+        padding: 0.5em;
+      }
+      code[class*="language-"],
+      pre[class*="language-"] {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="/css/prism-vs.css">
+  <script async src="/scripts/venny.js"></script>
+</head>
+
+<body>
+  <article>
+    <main>
+    <h1>Venny</h1>
+<p>Venny is a set of components used to show Venn/Euler Diagrams on a web page.</p>
+<p>It is implemented as framework independent custom-elements, and the layout algorithm is based on <a href="https://github.com/benfred/venn.js/">venn.js</a>.</p>
+<p>For full documentation visit this project on Github</p>
+<p><a class="buttonLink" href="https://github.com/pshihn/venn">Venny on Github</a></p>
+<h2>Let's dive in</h2>
+<p>You can import the project in your JavaScript from NPM or just source it directly in your HTML.</p>
+<p>Let's define two sets <em>Apples</em> and <em>Oranges</em>.</p>
+<figure>
+  <venn-diagram width="300" height="200">
+    <venn-set name="A" label="Apples"></venn-set>
+    <venn-set name="B" label="Oranges"></venn-set>
+  </venn-diagram>
+</figure>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">type</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>module<span class="token punctuation">"</span></span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>https://unpkg.com/venny?module<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span><br><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-diagram</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Apples<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>B<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Oranges<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-diagram</span><span class="token punctuation">></span></span></code></pre>
+<p>Now let's create an intersection of these two Sets.</p>
+<figure>
+  <venn-diagram width="300" height="200">
+    <venn-set name="A" label="Apples"></venn-set>
+    <venn-set name="B" label="Oranges"></venn-set>
+    <venn-n sets="A B">
+  </venn-diagram>
+</figure>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-diagram</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Apples<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>B<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Oranges<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A B<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-diagram</span><span class="token punctuation">></span></span></code></pre>
+<p>But the quantity of <em>Apples</em> is double than those of <em>Oranges</em>. You can configure the size of each set.</p>
+<figure>
+  <venn-diagram width="300" height="200">
+    <venn-set name="A" label="Apples" size="20"></venn-set>
+    <venn-set name="B" label="Oranges" size="10"></venn-set>
+    <venn-n sets="A B"></venn-n>
+  </venn-diagram>
+</figure>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-diagram</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Apples<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>B<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Oranges<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A B<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-n</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-diagram</span><span class="token punctuation">></span></span></code></pre>
+<p>You can also size the intersections</p>
+<figure>
+  <venn-diagram width="300" height="200">
+    <venn-set name="A"></venn-set>
+    <venn-set name="B"></venn-set>
+    <venn-set name="C"></venn-set>
+    <venn-n sets="A B C" size="1"></venn-n>
+    <venn-n sets="A B" size="5"></venn-n>
+    <venn-n sets="A C" size="3"></venn-n>
+  </venn-diagram>
+</figure>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-diagram</span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>B<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>C<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A B C<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-n</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A B<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>5<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-n</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A C<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-n</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-diagram</span><span class="token punctuation">></span></span></code></pre>
+<p>You can also style them using CSS</p>
+<figure>
+  <style>
+    #cssExampleDiagram {
+      --venn-circle-stroke: red;
+      --venn-circle-stroke-width: 3;
+      --venn-circle-grapes-fill-opacity: 0;
+      --venn-intersection-a-b-grapes-stroke: white;
+      --venn-intersection-a-b-grapes-stroke-width: 5px;
+    }
+  </style>
+  <venn-diagram id="cssExampleDiagram" width="300" height="200">
+    <venn-set name="A"></venn-set>
+    <venn-set name="B"></venn-set>
+    <venn-set name="Grapes" label="Grapes"></venn-set>
+    <venn-n sets="A B Grapes"></venn-n>
+  </venn-diagram>
+</figure>
+<pre class="language-css"><code class="language-css"><span class="token selector">venn-diagram</span> <span class="token punctuation">{</span><br>  <span class="token property">--venn-circle-stroke</span><span class="token punctuation">:</span> red<span class="token punctuation">;</span><br>  <span class="token property">--venn-circle-stroke-width</span><span class="token punctuation">:</span> 3<span class="token punctuation">;</span><br>  <span class="token property">--venn-circle-grapes-fill-opacity</span><span class="token punctuation">:</span> 0<span class="token punctuation">;</span><br>  <span class="token property">--venn-intersection-a-b-grapes-stroke</span><span class="token punctuation">:</span> white<span class="token punctuation">;</span><br>  <span class="token property">--venn-intersection-a-b-grapes-stroke-width</span><span class="token punctuation">:</span> 5px<span class="token punctuation">;</span><br><span class="token punctuation">}</span></code></pre>
+<p>Or, Add Hover effects</p>
+<figure>
+  <style>
+    #eventExampleDiagram,
+    #hoverExampleDiagram {
+      --venn-hover-circle-fill-opacity: 0.5;
+      --venn-hover-circle-stroke: #000;
+      --venn-hover-circle-stroke-width: 3;
+      --venn-hover-intersection-stroke: #fff;
+      --venn-hover-intersection-stroke-width: 3;
+    }
+  </style>
+  <venn-diagram id="hoverExampleDiagram" width="300" height="200">
+    <venn-set name="A"></venn-set>
+    <venn-set name="B"></venn-set>
+    <venn-set name="C"></venn-set>
+    <venn-n sets="A B C"></venn-n>
+  </venn-diagram>
+</figure>
+<p>Since custom-elements are just like any other node on your page, you can add event listeners like click handlers. Try clicking on this diagram.</p>
+<figure>
+  <venn-diagram id="eventExampleDiagram" width="300" height="200">
+    <venn-set name="Apples" label="Apples"></venn-set>
+    <venn-set name="Oranges" label="Oranges"></venn-set>
+    <venn-set name="Grapes"  label="Grapes"></venn-set>
+    <venn-n sets="Apples Oranges" size="1"></venn-n>
+    <venn-n sets="Apples Grapes" size="3"></venn-n>
+  </venn-diagram>
+</figure>
+<pre class="language-js"><code class="language-js">document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'venn-set'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>  d<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Clicked on </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>d<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>document<span class="token punctuation">.</span><span class="token function">querySelectorAll</span><span class="token punctuation">(</span><span class="token string">'venn-n'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">d</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>  d<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">'click'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Clicked intersection for </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>d<span class="token punctuation">.</span>sets<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>While we are at it, you can configure nested sets</p>
+<figure>
+<venn-diagram width="300" height="200">
+  <venn-set name="A" label="Apples"></venn-set>
+  <venn-set name="B" label="Oranges">
+    <venn-set name="C" label="Lemons">
+      <venn-set name="D" label="Limes"></venn-set>
+    </venn-set>
+  </venn-set>
+  <venn-n sets="A B" size="1" label="A+O"></venn-n>
+</venn-diagram>
+</figure>
+<pre class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-diagram</span> <span class="token attr-name">width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>300<span class="token punctuation">"</span></span> <span class="token attr-name">height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>200<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Apples<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>B<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Oranges<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>C<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Lemons<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><br>      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-set</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>D<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>Limes<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-set</span><span class="token punctuation">></span></span><br>  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>venn-n</span> <span class="token attr-name">sets</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A B<span class="token punctuation">"</span></span> <span class="token attr-name">size</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>1<span class="token punctuation">"</span></span> <span class="token attr-name">label</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>A+O<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-n</span><span class="token punctuation">></span></span><br><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>venn-diagram</span><span class="token punctuation">></span></span></code></pre>
+<h2>License</h2>
+<p><a href="https://github.com/pshihn/venn/blob/main/LICENSE">MIT License</a> (c) <a href="https://twitter.com/preetster">Preet Shihn</a></p>
+<p></p>
+    </main>
+  </article>
+  <script type="module">
+    setTimeout(() => {
+      document.querySelectorAll('#eventExampleDiagram venn-set').forEach((d) => {
+        d.addEventListener('click', () => {
+          window.alert(`Clicked on ${d.label}`);
+        });
+      });
+      document.querySelectorAll('#eventExampleDiagram venn-n').forEach((d) => {
+        d.addEventListener('click', () => {
+          window.alert(`Clicked intersection for ${d.sets}`);
+        });
+      });
+    }, 1000);
+  </script>
+</body>
+
+</html>

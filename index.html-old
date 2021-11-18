@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+  <title>Venny</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    article {
+      padding: 16px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+
+<body>
+  <article>
+    <h1>Venny</h1>
+    <p>Venny is a set of components used to show Venn/Euler Diagrams on a web page.</p>
+    <p>It is implemented as framework independent custom-elements, and the layout algorithm is based on <a
+        href="https://github.com/benfred/venn.js/">venn.js</a>.</p>
+
+    <h2>Let's get started</h2>
+    <p>You can import the project in your JavaScript from NPM or just source it directly in your HTML.</p>
+    <p></p>
+
+    <div class="codePanel">
+      <pre>
+      <code>
+        <script type="module" src="https://unpkg.com/venny?module"></script>
+        <venn-diagram>
+          <venn-set name="A" label="Apples"></venn-set>
+          <venn-set name="B" label="Oranges"></venn-set>
+          <venn-n sets="A B" label="Fruit"></venn-n>
+        </venn-diagram>
+      </code>
+      </pre>
+    </div>
+  </article>
+</body>
+
+</html>
