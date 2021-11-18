@@ -19,7 +19,9 @@ For example:
   <venn-n sets="A B" label="Fruit"></venn-n>
 </venn-diagram>
 ```
+
 will create:
+
 <img width="555" alt="Screen Shot 2021-11-17 at 3 38 18 PM" src="https://user-images.githubusercontent.com/833927/142299606-43ce9740-5922-47fd-a6be-dbdf79976237.png">
 
 You can also import Venny in your JavaScript project from NPM
@@ -28,7 +30,13 @@ You can also import Venny in your JavaScript project from NPM
 npm install venny -s
 ```
 
-### Website 
+### Styling & Interactivity
+
+Venny components expose CSS properties to let you control the styling of the section. See more in the [Styling section](https://roughjs.com).
+
+Since these components are just DOM Nodes, you can add click and other handlers to them as you would add to any other node. 
+
+### Usage Examples
 
 More usage and examples on this website: [Venny](https://roughjs.com)
 
