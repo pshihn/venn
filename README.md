@@ -128,5 +128,20 @@ Or you can be specific
 ```
 ![Screen Shot 2021-11-17 at 11 02 07 PM](https://user-images.githubusercontent.com/833927/142368046-b808e127-c4b1-436a-b9e1-fa0ddad015d8.png)
 
+### Nested Sets
 
+When you need to show that a Set is a subset of another one, you can create an intersection expressing that, or you can define the Subset as a child of the parent Set. Venny will automatically generate the intersection of the two.
+
+```html
+<venn-diagram>
+  <venn-set name="A" label="Apples"></venn-set>
+  <venn-set name="B" label="Oranges">
+    <venn-set name="C" label="Lemons">
+      <venn-set name="D" label="Limes"></venn-set>
+    </venn-set>
+  </venn-set>
+  <venn-n sets="A B" size="1" label="A+O"></venn-n>
+</venn-diagram>
+```
+![Screen Shot 2021-11-17 at 11 11 15 PM](https://user-images.githubusercontent.com/833927/142369233-21eb4005-fcec-4a4a-a9e1-605c8a6f565e.png)
 
