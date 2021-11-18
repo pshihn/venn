@@ -41,7 +41,7 @@ Since these components are just DOM Nodes, you can add click and other handlers 
 
 More usage and examples on this website: [Venny](https://roughjs.com)
 
-## API
+## Documentation 
 
 Venny is a set of **three components**: `venn-diagram` is the container. `venn-set` represents a set or, visually a circle. `venn-n` describes intersection of sets. 
 
