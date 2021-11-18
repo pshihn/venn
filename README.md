@@ -22,7 +22,8 @@ For example:
 
 will create:
 
-<img width="555" alt="Screen Shot 2021-11-17 at 3 38 18 PM" src="https://user-images.githubusercontent.com/833927/142299606-43ce9740-5922-47fd-a6be-dbdf79976237.png">
+![Venn diagram example](https://user-images.githubusercontent.com/833927/142365349-bd5ca46d-7c3b-41cd-98ee-94848c4f6094.png)
+
 
 You can also import Venny in your JavaScript project from NPM
 
