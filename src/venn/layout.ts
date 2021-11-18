@@ -125,27 +125,33 @@ function getDistanceMatrices(areas: Area[], sets: Area[], setids: { [key: string
 
   // compute required distances between all the sets such that
   // the areas match
-  areas.filter(function (x) { return x.sets.length === 2; })
-    .map(function (current) {
-      const left = setids[current.sets[0]],
-        right = setids[current.sets[1]],
-        r1 = Math.sqrt(sets[left].size / Math.PI),
-        r2 = Math.sqrt(sets[right].size / Math.PI),
-        distance = distanceFromIntersectArea(r1, r2, current.size);
-
-      distances[left][right] = distances[right][left] = distance;
-
-      // also update constraints to indicate if its a subset or disjoint
-      // relationship
-      let c = 0;
-      if (current.size + 1e-10 >= Math.min(sets[left].size,
-        sets[right].size)) {
-        c = 1;
-      } else if (current.size <= 1e-10) {
-        c = -1;
+  areas.filter(function (x) {
+    if (x.sets.length === 2) {
+      if (setids[x.sets[0]] && setids[x.sets[1]]) {
+        return true;
       }
-      constraints[left][right] = constraints[right][left] = c;
-    });
+    }
+    return false;
+  }).map(function (current) {
+    const left = setids[current.sets[0]];
+    const right = setids[current.sets[1]];
+    const r1 = Math.sqrt(sets[left].size / Math.PI),
+      r2 = Math.sqrt(sets[right].size / Math.PI),
+      distance = distanceFromIntersectArea(r1, r2, current.size);
+
+    distances[left][right] = distances[right][left] = distance;
+
+    // also update constraints to indicate if its a subset or disjoint
+    // relationship
+    let c = 0;
+    if (current.size + 1e-10 >= Math.min(sets[left].size,
+      sets[right].size)) {
+      c = 1;
+    } else if (current.size <= 1e-10) {
+      c = -1;
+    }
+    constraints[left][right] = constraints[right][left] = c;
+  });
 
   return { distances: distances, constraints: constraints };
 }
@@ -299,13 +305,15 @@ function greedyLayout(areas: Area[], params: LayoutParameter) {
     let weight = (typeof current.weight === 'number') ? current.weight : 1.0;
     const left = current.sets[0], right = current.sets[1];
 
-    // completely overlapped circles shouldn't be positioned early here
-    if (current.size + SMALL >= Math.min(circles[left].size || 0, circles[right].size || 0)) {
-      weight = 0;
-    }
+    if (circles[left] && circles[right]) {
+      // completely overlapped circles shouldn't be positioned early here
+      if (current.size + SMALL >= Math.min(circles[left].size || 0, circles[right].size || 0)) {
+        weight = 0;
+      }
 
-    setOverlaps[left].push({ set: right, size: current.size, weight: weight });
-    setOverlaps[right].push({ set: left, size: current.size, weight: weight });
+      setOverlaps[left].push({ set: right, size: current.size, weight: weight });
+      setOverlaps[right].push({ set: left, size: current.size, weight: weight });
+    }
   }
 
   // get list of most overlapped sets
@@ -409,7 +417,7 @@ export function lossFunction(sets: CircleMap, overlaps: Area[]): number {
   let output = 0;
 
   const getCircles = (indices: string[]) => {
-    return indices.map((i) => { return sets[i]; });
+    return indices.map((i) => { return sets[i]; }).filter((d) => !!d);
   };
 
   for (let i = 0; i < overlaps.length; ++i) {
@@ -420,8 +428,11 @@ export function lossFunction(sets: CircleMap, overlaps: Area[]): number {
     } else if (area.sets.length === 2) {
       const left = sets[area.sets[0]];
       const right = sets[area.sets[1]];
-      overlap = circleOverlap(left.radius, right.radius,
-        distance(left, right));
+      if (left && right) {
+        overlap = circleOverlap(left.radius, right.radius, distance(left, right));
+      } else {
+        continue;
+      }
     } else {
       overlap = intersectionArea(getCircles(area.sets));
     }

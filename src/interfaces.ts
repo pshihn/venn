@@ -23,6 +23,15 @@ export interface Circle {
   size?: number;
 }
 
+export interface Intersection {
+  path: string;
+}
+
+export interface SetIntersection extends Intersection {
+  sets: string[];
+  size: number;
+}
+
 export interface Arc {
   circle: Circle;
   width: number;
@@ -30,10 +39,30 @@ export interface Arc {
   p2: Point;
 }
 
+export interface IntersectionStats {
+  area?: number;
+  arcArea?: number;
+  polygonArea?: number;
+  arcs: Arc[];
+  innerPoints?: Point[];
+  intersectionPoints?: Point[]
+}
+
 export interface Area {
   sets: string[];
   size: number;
   weight?: number | undefined;
+}
+
+export interface VennBaseElement extends HTMLElement {
+  setSvgNode(node: SVGElement): void;
+}
+
+export interface AreaDetails {
+  sets: string[];
+  size: number;
+  label?: string;
+  component?: VennBaseElement;
 }
 
 export interface OverlapItem {

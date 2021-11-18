@@ -3,7 +3,7 @@
 // Code adapted from https://github.com/benfred/venn.js
 
 
-import { Circle, Arc, Point } from '../interfaces';
+import { Circle, Arc, Point, IntersectionStats } from '../interfaces';
 const SMALL = 1e-10;
 
 export interface PointWithIndex extends Point {
@@ -13,7 +13,7 @@ export interface PointWithIndex extends Point {
 
 /** Returns the intersection area of a bunch of circles (where each circle
  is an object having an x,y and radius property) */
-export function intersectionArea(circles: Circle[], stats?: any) {
+export function intersectionArea(circles: Circle[], stats?: IntersectionStats) {
   // get all the intersection points of the circles
   const intersectionPoints = getIntersectionPoints(circles);
 

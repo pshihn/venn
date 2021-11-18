@@ -1,8 +1,8 @@
 /* eslint-disable */
 
-import resolve from 'rollup-plugin-node-resolve';
+import { terser } from 'rollup-plugin-terser';
 
-const outFolder = 'dist';
+const outFolder = 'bin';
 
 function onwarn(warning) {
   if (warning.code === 'THIS_IS_UNDEFINED')
@@ -14,12 +14,32 @@ export default [
   {
     input: 'bin/venny.js',
     output: {
-      file: `${outFolder}/venny.iife.js`,
-      format: 'iife'
+      file: `${outFolder}/venny.esm.js`,
+      format: 'esm'
     },
     onwarn,
     plugins: [
-      resolve()
+      terser({
+        output: {
+          comments: false
+        }
+      })
+    ]
+  },
+  {
+    input: 'bin/venny.js',
+    output: {
+      file: `${outFolder}/venny.iife.js`,
+      format: 'iife',
+      name: 'Venny'
+    },
+    onwarn,
+    plugins: [
+      terser({
+        output: {
+          comments: false
+        }
+      })
     ]
   }
 ];

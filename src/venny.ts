@@ -1,13 +1,7 @@
-import { Area } from './interfaces';
-import { VennDiagram } from './venn-diagram';
-
 import './venn-diagram.js';
+import './venn-set';
+import './venn-intersection';
 
-const sets: Area[] = [
-  { sets: ['A'], size: 12 },
-  { sets: ['B'], size: 12 },
-  { sets: ['A', 'B'], size: 2 },
-];
-
-const vd = document.querySelector('venn-diagram') as VennDiagram;
-vd.sets = sets;
+export * from './venn-diagram.js';
+export * from './venn-set';
+export * from './venn-intersection';
