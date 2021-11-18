@@ -21,6 +21,8 @@ interface IntersectionElement extends SetIntersection {
 
 const NS = 'http://www.w3.org/2000/svg';
 const COLORS = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf'];
+const DEFAULT_WIDTH = 600;
+const DEFAULT_HEIGHT = 350;
 
 export class VennDiagram extends HTMLElement {
   private _connected = false;
@@ -29,8 +31,8 @@ export class VennDiagram extends HTMLElement {
   private __labels?: HTMLDivElement;
 
   private _config: DiagramConfig = {
-    height: 350,
-    width: 600,
+    height: DEFAULT_HEIGHT,
+    width: DEFAULT_WIDTH,
   };
 
   private _areas: AreaDetails[] = [];
@@ -43,6 +45,10 @@ export class VennDiagram extends HTMLElement {
   private _nMap = new Map<string, IntersectionElement>();
 
   private _renderRequestPending = false;
+
+  static get observedAttributes() {
+    return ['width', 'height'];
+  }
 
   constructor() {
     super();
@@ -81,6 +87,41 @@ export class VennDiagram extends HTMLElement {
     <div id="labels"></div>
     `;
   }
+
+  attributeChangedCallback(name: string, _: string, newValue: string) {
+    switch (name) {
+      case 'width':
+        this.width = +newValue;
+        break;
+      case 'height':
+        this.height = +newValue;
+        break;
+    }
+  }
+
+  get width(): number {
+    return this._config.width || DEFAULT_WIDTH;
+  }
+
+  set width(value: number) {
+    if (this._config.width !== value) {
+      this._config.width = value;
+      this._requestRender();
+    }
+  }
+
+  get height(): number {
+    return this._config.height || DEFAULT_HEIGHT;
+  }
+
+  set height(value: number) {
+    if (this._config.height !== value) {
+      this._config.height = value;
+      this._requestRender();
+    }
+  }
+
+
 
   connectedCallback() {
     this._connected = true;
@@ -147,45 +188,43 @@ export class VennDiagram extends HTMLElement {
     }
     value = value || [];
 
-    if (JSON.stringify(value) !== JSON.stringify(this._areas)) {
-      this._areas = value;
-      this._areaMap.clear();
-      value.forEach((d) => {
-        this._areaMap.set(this._areaKey(d), d);
-        if (!d.size) {
-          if (d.sets.length === 1) {
-            d.size = 10;
-          } else if (d.sets.length > 1) {
-            d.size = 2;
-          }
+    this._areas = value;
+    this._areaMap.clear();
+    value.forEach((d) => {
+      this._areaMap.set(this._areaKey(d), d);
+      if (!d.size) {
+        if (d.sets.length === 1) {
+          d.size = 10;
+        } else if (d.sets.length > 1) {
+          d.size = 2;
         }
-      });
+      }
+    });
 
-      // Add missing intersections
-      for (const area of this._areas) {
-        const length = area.sets.length;
-        if (length > 2) {
-          const out: string[][] = [];
-          for (let r = 2; r < length; r++) {
-            const data = new Array<string>(r);
-            this._findSubsets(area.sets, data, 0, length - 1, 0, r, out);
-          }
-          for (const subset of out) {
-            const key = subset.join(',');
-            if (!this._areaMap.has(key)) {
-              const missingArea: AreaDetails = {
-                sets: [...subset],
-                size: area.size,
-              };
-              this._areas.push(missingArea);
-              this._areaMap.set(key, missingArea);
-            }
+    // Add missing intersections
+    for (const area of this._areas) {
+      const length = area.sets.length;
+      if (length > 2) {
+        const out: string[][] = [];
+        for (let r = 2; r < length; r++) {
+          const data = new Array<string>(r);
+          this._findSubsets(area.sets, data, 0, length - 1, 0, r, out);
+        }
+        for (const subset of out) {
+          const key = subset.join(',');
+          if (!this._areaMap.has(key)) {
+            const missingArea: AreaDetails = {
+              sets: [...subset],
+              size: area.size,
+            };
+            this._areas.push(missingArea);
+            this._areaMap.set(key, missingArea);
           }
         }
       }
-
-      this._render();
     }
+
+    this._render();
   }
 
 
@@ -229,8 +268,8 @@ export class VennDiagram extends HTMLElement {
 
   private _render() {
     const svg = this._svg;
-    svg.setAttribute('width', `${this._config.width || 600}`);
-    svg.setAttribute('height', `${this._config.height || 350}`);
+    svg.setAttribute('width', `${this._config.width || DEFAULT_WIDTH}`);
+    svg.setAttribute('height', `${this._config.height || DEFAULT_HEIGHT}`);
 
     const { circles, textCenters } = diagram(this._areas, this._config);
     const usedCircles = new Set<CircleElement>();
