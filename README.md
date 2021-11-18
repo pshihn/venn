@@ -35,7 +35,7 @@ npm install venny -s
 
 ### Styling & Interactivity
 
-Venny components expose CSS properties to let you control the styling of the section. See more in the [Styling section](https://roughjs.com).
+Venny components expose CSS properties to let you control the styling of the section. See more in the [Styling section](#styling).
 
 Since these components are just DOM Nodes, you can add click and other handlers to them as you would add to any other node. 
 
