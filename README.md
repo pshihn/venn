@@ -41,7 +41,7 @@ Since these components are just DOM Nodes, you can add click and other handlers 
 
 ### Usage Examples
 
-More usage and examples on this website: [Venny](https://roughjs.com)
+More usage and examples on this website: [Venny Website](https://pshihn.github.io/venn/)
 
 ## Documentation 
 
