@@ -1,6 +1,6 @@
 # Venny
 
-Venny is a set of custom elements used to show Venn Diagrams on a web page. These Web Components are framework indepenedent and can easily be used with any framework or in markdown. 
+Venny is a set of custom elements used to show Venn/Euler Diagrams on a web page. These Web Components are framework indepenedent and can easily be used with any framework or in markdown. 
 
 Venny is based on [venn.js](https://github.com/benfred/venn.js/) which provides the algorithms to layout area proportional Venn and Euler diagrams. 
 
