@@ -253,7 +253,7 @@ export class VennDiagram extends HTMLElement {
         se.labelNode = labelNode;
         labels.appendChild(labelNode);
       }
-      labelNode.style.color = `var(--venn-label-${this._areaKey(area).toLowerCase().replace(',', '-')}-color, var(--venn-label-color, ${color}))`;
+      labelNode.style.color = `var(--venn-label-${this._areaKey(area).toLowerCase().replace(/,/g, '-')}-color, var(--venn-label-color, ${color}))`;
       labelNode.textContent = area.label;
       const centerPoint = textCenters.get(this._areaKey(area)) || { x: 0, y: 0 };
       labelNode.style.transform = `translate3d(-50%, -50%, 0) translate3d(${centerPoint.x}px, ${centerPoint.y}px, 0px)`;
@@ -293,7 +293,7 @@ export class VennDiagram extends HTMLElement {
       // check if an element already exists for this id
       // if not, render a node
       let se = this._circleMap.get(id);
-      const circleId = `circle-${id.toLowerCase().replace(' ', '')}`;
+      const circleId = `circle-${id.toLowerCase().replace(/\s/g, '')}`;
       if (!se) {
         const g = svg.ownerDocument.createElementNS(NS, 'g');
         const c = svg.ownerDocument.createElementNS(NS, 'circle');
@@ -379,7 +379,7 @@ export class VennDiagram extends HTMLElement {
     });
     for (const intersection of setIntersections) {
       const key = this._areaKey(intersection);
-      const pathId = `intersection-${key.toLowerCase().replace(',', '-')}`;
+      const pathId = `intersection-${key.toLowerCase().replace(/,/g, '-')}`;
       // check if shape element already exists
       let intersectionElement = this._nMap.get(key);
       if (intersectionElement) {
